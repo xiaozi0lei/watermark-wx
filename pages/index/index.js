@@ -45,6 +45,15 @@ Page({
   },
 
   removeMark: function() {
+    // 判断 url 是否为空
+    var urlVideo = this.data.videoUrl.trim();
+    if(urlVideo == '') {
+      wx.showToast({
+        title: '请粘贴url！',
+        icon: 'none'
+      })
+      return false;
+    }
     var num;
     var today = util.formatDate(new Date(), '');
     var lastParseDate = wx.getStorageSync('lastParseDate');
@@ -55,6 +64,7 @@ Page({
     } else {
       num = wx.getStorageSync('dailyFreeParseNum');
     }
+    num = 10
     if (num > 0) {
       this.parseVideo();
     } else {
@@ -99,12 +109,15 @@ Page({
       },
       success: res => {
         console.log(res)
-        var noWaterUrl = encodeURIComponent(res.data.noWaterUrl);
-        var imageUrl = encodeURIComponent(res.data.imageUrl);
-        var preview = res.data.preview;
+        var data = res.data.data;
+        var playUrl = encodeURIComponent(data.playUrl);
+        var saveUrl = encodeURIComponent(data.saveUrl);
+        var downloadUrl = encodeURIComponent(data.downloadUrl);
+        var imageUrl = encodeURIComponent(data.imageUrl);
+        var preview = data.preview;
         wx.setStorageSync('dailyFreeParseNum',  wx.getStorageSync('dailyFreeParseNum') - 1);
         wx.navigateTo({
-          url: "../video/video?url=" + noWaterUrl + '&image=' + imageUrl + '&preview=' + preview,
+          url: "../video/video?playUrl=" + playUrl + '&saveUrl=' + saveUrl  + '&downloadUrl=' + downloadUrl  + '&imageUrl=' + imageUrl + '&preview=' + preview,
         })
       }
     })

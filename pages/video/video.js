@@ -3,14 +3,19 @@
 var app = getApp(), n = ''
 Page({
     data: {
-        dataUrl: '',
-        dataImage: '',
+        playUrl: '',
+        saveUrl: '',
+        downloadUrl: '',
+        imageUrl: '',
         preview: 0,
     },
     onLoad: function (options) {
+        console.log(options)
         this.setData({
-            dataUrl: decodeURIComponent(options.url),
-            dataImage: decodeURIComponent(options.image),
+            playUrl: decodeURIComponent(options.playUrl),
+            saveUrl: decodeURIComponent(options.saveUrl),
+            downloadUrl: decodeURIComponent(options.downloadUrl),
+            imageUrl: decodeURIComponent(options.imageUrl),
             preview: options.preview
         })
     },
@@ -25,7 +30,7 @@ Page({
     },
     copyUrl: function() {
         wx.setClipboardData({
-            data: this.data.dataUrl,
+            data: this.data.downloadUrl,
             success: function(a) {
               wx.showToast({
                 title: '复制成功',
@@ -35,25 +40,28 @@ Page({
           });
     },
 
-    download: function () {
-        var t = this, e = app.globalData.downloadPrefix + t.data.dataUrl; // 无法直接下载资源域下的资源，需要通过nginx中转一层
+    // 保存到相册
+    saveVideo: function () {
+        var that = this
+        var downloadUrl = app.globalData.downloadPrefix + that.data.saveUrl; // 无法直接下载资源域下的资源，需要通过nginx中转一层
+        console.log(downloadUrl)
         wx.showLoading({
             title: '保存中 0%'
         }), (n = wx.downloadFile({
-            url: e,
+            url: downloadUrl,
             success: function (o) {
                 wx.hideLoading(), wx.saveVideoToPhotosAlbum({
                     filePath: o.tempFilePath,
                     success: function (o) {
-                        t.showToast('保存成功', 'success'), setTimeout(function () {
+                        that.showToast('保存成功', 'success'), setTimeout(function () {
                             wx.setClipboardData({
                               data: '',
                             })
-                            t.goBack()
+                            that.goBack()
                         }, 1e3)
                     },
                     fail: function (o) {
-                        t.showToast('保存失败')
+                        that.showToast('保存失败')
                     }
                 })
             },
@@ -67,13 +75,17 @@ Page({
         })
     },
     postSave: function (o) {
-        var t = this
+        var that = this
+        // 获取用户已经同意的权限
         wx.getSetting({
             success: function (o) {
-                o.authSetting['scope.writePhotosAlbum'] ? t.download() : wx.authorize({
+                // 确认用户是否具有写入相册的权限
+                o.authSetting['scope.writePhotosAlbum'] ? that.saveVideo() : wx.authorize({
+                    // 让用户授权写入相册的权限
                     scope: 'scope.writePhotosAlbum',
                     success: function () {
-                        t.download()
+                        // 保存到相册
+                        that.saveVideo()
                     },
                     fail: function (o) {
                         wx.showModal({
