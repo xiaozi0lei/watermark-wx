@@ -6,11 +6,13 @@ const util = require('../../utils/util.js');
 Page({
   data: {
     userInfo: {},
+    hasUserInfo: false,
+    canIUseGetUserProfile: false,
     videoUrl: 'https://v.douyin.com/JxHkvPT/',
   },
 
   onLoad: function () {
-  
+    // 1. 检查用户是否已经
   },
 
   onShow() {
@@ -101,6 +103,7 @@ Page({
 
   // 视频解析
   parseVideo: function () {
+    console.log(wx.getStorageSync('token'))
     app.apiRequest({
       url: '/video/parse',
       method: 'POST',

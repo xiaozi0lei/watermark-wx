@@ -66,7 +66,7 @@ Page({
                 })
             },
             fail: function (o) {
-                n = null, wx.hideLoading(), t.showToast('下载失败')
+                n = null, wx.hideLoading(), that.showToast('下载失败')
             }
         })).onProgressUpdate(function (o) {
             100 === o.progress ? '' : wx.showLoading({

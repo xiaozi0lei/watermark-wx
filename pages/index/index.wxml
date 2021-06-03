@@ -9,7 +9,7 @@
       </view>
     </view>
   </view>
-  
+
   <view class="watermark">
     <view class="watermark-input">
       <input model:value="{{videoUrl}}" id="inputText" placeholder=" 请复制视频链接，粘贴到这里" type="text"></input>
@@ -19,8 +19,13 @@
       </button>
     </view>
     <button bindtap="removeMark" class="parsing" hoverClass="parsing-btn-hover">去水印</button>
-    <view style="height: 300px;"></view>
+    <view style="height: 300px;" class="center">
+      <image src="../../images/steps-01.jpg"></image>
+      <image src="../../images/steps-02.jpg"></image>
+      <image src="../../images/steps-03.jpg"></image>
+    </view>
   </view>
+
 </view>
 
 <!-- <view class="page-section page-section-spacing swiper">
