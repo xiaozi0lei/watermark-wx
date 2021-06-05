@@ -14,6 +14,13 @@ Component({
    */
   methods: {
     onLoad: function () {
+      var existUserInfo = wx.getStorageSync("userInfo")
+      if(existUserInfo != "") {
+        this.setData({
+          hasUserInfo: true,
+          userInfo: existUserInfo
+        })
+      }
       if (wx.getUserProfile) {
         this.setData({
           canIUseGetUserProfile: true
@@ -77,11 +84,9 @@ Component({
         success: res => {
           try {
             wx.setStorageSync('token', res.data.token);
-
           }catch(e) {
             console.log(e)
           }
-          // console.log(wx.getStorageSync('token'))
           // callback && callback();
         }
       });

@@ -13,79 +13,23 @@ App({
         //登录成功后会返回一个微信端提供的 code ，用来自定义登录使用
         console.log("code", res.code);
         this.getToken(res.code);
-        //向自己的后台发送请求
-        // wx.request({
-        //   url: this.globalData.URL+'login/',
-        //   data:{
-        //     code:res.code
-        //   },
-        //   header:{
-        //     "content-type": "application/json"
-        //   },
-        //   method:"POST",
-        //   success:function(e){
-        //     console.log(e)
-        //       //请求成功后会返回一个自己后端生成的 token 用来做其他操作的校验，把token保存在本地
-        //     wx.setStorageSync("token", e.data.data.token)
-        //   }
-        // })
-        // 发送 res.code 到后台换取 openId, sessionKey, unionId
       }
     })
   },
-
-  /**
-   * 登陆并获取用户信息、token
-   * @param {*} callback 
-   */
-  // getUserInfo: function (callback = null) {
-  //   // 登录
-  //   wx.login({
-  //     success: res => {
-  //       // 发送 res.code 到后台换取 openId, sessionKey, unionId
-  //       var code = res.code;
-  //       // 获取用户信息
-  //       wx.getSetting({
-  //         success: res => {
-  //           if (res.authSetting['scope.userInfo']) {
-  //             console.log(1)
-  //             console.log(res.authSetting)
-  //             // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
-  //             wx.getUserProfile({
-  //               success: res => {
-  //                 console.log(2)
-  //                 // 可以将 res 发送给后台解码出 unionId
-  //                 this.globalData.userInfo = res.userInfo
-  //                 this.globalData.hasUserInfo = true
-  //                 if (!this.checkIsLogin()) {
-  //                   console.log(3)
-  //                   this.getToken(code, res.encryptedData, res.iv);
-  //                 }
-  //                 // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-  //                 // 所以此处加入 callback 以防止这种情况
-  //                 // callback && callback(res);
-  //               }
-  //             })
-  //           }
-  //         }
-  //       })
-  //     }
-  //   });
-  // },
 
   globalData: {
     userInfo: null,
     hasUserInfo: false,
     // apiDomain: 'https://api.guoleishenbo.top/api', //生产
     downloadPrefix: 'https://api.guoleishenbo.top/download?url=', // 通过代理服务器中转（微信限制资源域名，不同平台cdn域名千变万化）
-    apiDomain: 'http://127.0.0.1/api', // test
+    // apiDomain: 'http://127.0.0.1/api', // test
+    apiDomain: 'http://192.168.0.105/api', // test
     // downloadPrefix: 'http://127.0.0.1/download?url=', // 通过代理服务器中转（微信限制资源域名，不同平台cdn域名千变万化）
     defaultDailyFreeParseNum: 10,
   },
 
   //全局统一调用接口的方法
   apiRequest: function (options) {
-    console.log(wx.getStorageSync('token'))
     var token = wx.getStorageSync('token')
     wx.request({
       url: this.globalData.apiDomain + options.url,

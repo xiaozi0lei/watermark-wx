@@ -91,7 +91,6 @@ Component({
      * @param e 
      */
     Download: function(e) {
-      console.log(e)
       wx.setClipboardData({
         data: e.currentTarget.dataset.link,
       })
